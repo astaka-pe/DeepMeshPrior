@@ -1,4 +1,4 @@
-name: meshcnn
+name: dmp
 channels:
   - defaults
   - pytorch
