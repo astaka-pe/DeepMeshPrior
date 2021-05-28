@@ -169,8 +169,8 @@ class Net(torch.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         # deep gmm
-        n_kernels = 5
-        hidden_size = [32, 64, 128, 256, 256, 512, 512, 256, 256, 128, 64]
+        n_kernels = 3
+        hidden_size = [32, 64, 128, 128, 256, 256, 256, 256, 128, 128, 64]
         self.conv1 = GMMConv(dataset.num_node_features, hidden_size[0], 2, n_kernels)
         self.conv2 = GMMConv(hidden_size[0], hidden_size[1], 2, n_kernels)
         self.conv3 = GMMConv(hidden_size[1], hidden_size[2], 2, n_kernels)
@@ -217,7 +217,7 @@ class Net(torch.nn.Module):
         dx = self.conv5(dx, edge_index, edge_attr)
         dx = self.bn5(dx)
         dx = self.l_relu(dx)
-
+        """
         dx = self.conv6(dx, edge_index, edge_attr)
         dx = self.bn6(dx)
         dx = self.l_relu(dx)
@@ -225,7 +225,7 @@ class Net(torch.nn.Module):
         dx = self.conv7(dx, edge_index, edge_attr)
         dx = self.bn7(dx)
         dx = self.l_relu(dx)
-
+        """
         dx = self.conv8(dx, edge_index, edge_attr)
         dx = self.bn8(dx)
         dx = self.l_relu(dx)
@@ -299,9 +299,9 @@ def mesh_laplacian_loss(pred_pos, ve, edges):
     sub_mesh_vv = [set(vv.tolist()).difference(set([i])) for i, vv in enumerate(sub_mesh_vv)]
 
     num_verts = pred_pos.size(1)
-    mat_rows = [np.array([i] * len(vv), dtype=np.long) for i, vv in enumerate(sub_mesh_vv)]
+    mat_rows = [np.array([i] * len(vv), dtype=np.int64) for i, vv in enumerate(sub_mesh_vv)]
     mat_rows = np.concatenate(mat_rows)
-    mat_cols = [np.array(list(vv), dtype=np.long) for vv in sub_mesh_vv]
+    mat_cols = [np.array(list(vv), dtype=np.int64) for vv in sub_mesh_vv]
     mat_cols = np.concatenate(mat_cols)
 
     mat_rows = torch.from_numpy(mat_rows).long().to(pred_pos.device)

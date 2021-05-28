@@ -155,20 +155,19 @@ gt_mesh = o3d.io.read_triangle_mesh(gt_file)
 input_mesh = o3d.io.read_triangle_mesh(input_file)
 label_mesh = o3d.io.read_triangle_mesh(label_file)
 
-l_mesh = Mesh(label_mesh)
 i_mesh = Mesh(input_mesh)
+l_mesh = Mesh(label_mesh)
 
 # ノードの特徴量
 np.random.seed(42)
-x = np.random.normal(size=(l_mesh.vs.shape[0], 16))
+x = np.random.normal(size=(i_mesh.vs.shape[0], 16))
 x = torch.tensor(x, dtype=torch.float, requires_grad=True)
 x_pos = torch.tensor(i_mesh.vs, dtype=torch.float)
-
 # ラベル
 y = torch.tensor(l_mesh.vs, dtype=torch.float)
 
 # エッジ
-edge_index = torch.tensor(l_mesh.edges.T, dtype=torch.long)
+edge_index = torch.tensor(i_mesh.edges.T, dtype=torch.long)
 edge_index = torch.cat([edge_index, edge_index[[1,0],:]], dim=1)
 
 data = Data(x=x, y=y, edge_index=edge_index)
@@ -197,7 +196,7 @@ class Net(torch.nn.Module):
         self.bn5 = torch.nn.BatchNorm1d(hidden_size[4])
         self.l_relu = nn.LeakyReLU(0.01)
         """
-        # deep deep gcn
+        # deep gcn
         hidden_size = [32, 64, 128, 256, 256, 512, 512, 256, 256, 128, 64]
         self.conv1 = GCNConv(dataset.num_node_features, hidden_size[0])
         self.conv2 = GCNConv(hidden_size[0], hidden_size[1])
@@ -209,10 +208,6 @@ class Net(torch.nn.Module):
         self.conv8 = GCNConv(hidden_size[6], hidden_size[7])
         self.conv9 = GCNConv(hidden_size[7], hidden_size[8])
         self.conv10 = GCNConv(hidden_size[8], hidden_size[9])
-        #self.conv11 = GCNConv(hidden_size[9], hidden_size[10])
-        #self.conv12 = GCNConv(hidden_size[10], 3)
-        self.conv11 = nn.Conv1d(hidden_size[9], hidden_size[10], 1)
-        self.conv12 = nn.Conv1d(hidden_size[10], 3, 1)
         self.linear1 = torch.nn.Linear(hidden_size[9], hidden_size[10])
         self.linear2 = torch.nn.Linear(hidden_size[10], 3)
         self.bn1 = torch.nn.BatchNorm1d(hidden_size[0])
@@ -225,7 +220,6 @@ class Net(torch.nn.Module):
         self.bn8 = torch.nn.BatchNorm1d(hidden_size[7])
         self.bn9 = torch.nn.BatchNorm1d(hidden_size[8])
         self.bn10 = torch.nn.BatchNorm1d(hidden_size[9])
-        self.bn11 = torch.nn.BatchNorm1d(hidden_size[10])
         self.l_relu = nn.LeakyReLU(0.01)
 
     def forward(self, data):
@@ -270,23 +264,13 @@ class Net(torch.nn.Module):
         dx = self.conv10(dx, edge_index)
         dx = self.bn10(dx)
         dx = self.l_relu(dx)
-        
+
         # dx, _ = scatter_max(x, dataset.batch, dim=0)
         dx = self.linear1(dx)
         dx = self.l_relu(dx)
         dx = self.linear2(dx)
         
-        """ conv2d
-        dx = dx.unsqueeze(2)
-        dx = self.conv11(dx)#, edge_index)
-        dx = self.bn11(dx)
-        dx = self.l_relu(dx)
-
-        dx = self.conv12(dx)#, edge_index)
-        dx = dx.squeeze(2)
-        """
         return x_pos.to(device) + dx
-        #return dx
 
 def mae_loss(pred_pos, real_pos):
     """mean-absolute error for vertex positions"""
@@ -377,7 +361,6 @@ def mad(mesh1, mesh2):
     return mad
 
 init_mad = mad(label_mesh, gt_mesh)
-min_mad = 1000
 print("initial_mad_value: ", init_mad)
 
 # デバイス設定
@@ -402,6 +385,7 @@ writer = SummaryWriter(log_dir=log_dir)
 os.mkdir("datasets/output/" + mesh_name + dt_now.isoformat())
 log_file = log_dir + "/log.txt"
 with open(log_file, mode="w") as f:
+    f.write("Input: ")
     f.write(input_file)
     f.write("\n")
     f.write("Label: ")
@@ -419,7 +403,7 @@ with open(log_file, mode="w") as f:
     f.write(str(init_mad))
 
 # learning loop
-for epoch in range(1, 10001):
+for epoch in range(1,4001):
     optimizer.zero_grad()
     out = model(dataset)
     loss1 = mse_loss(out, dataset.y)
@@ -433,11 +417,10 @@ for epoch in range(1, 10001):
     if epoch % 10 == 0:
         print('Epoch %d | Loss: %.4f' % (epoch, loss.item()))
     if epoch % 50 == 0:
-        label_mesh.vertices = o3d.utility.Vector3dVector(out.to('cpu').detach().numpy().copy())
-        label_mesh.triangle_normals = o3d.utility.Vector3dVector([])
-        o3d.io.write_triangle_mesh('datasets/output/' + mesh_name + dt_now.isoformat() + '/' + str(epoch) + '_output.obj', label_mesh)
-        mad_value = mad(label_mesh, gt_mesh)
-        min_mad = min(mad_value, min_mad)
-        print("mad_value: ", mad_value, "min_mad: ", min_mad)
+        input_mesh.vertices = o3d.utility.Vector3dVector(out.to('cpu').detach().numpy().copy())
+        input_mesh.triangle_normals = o3d.utility.Vector3dVector([])
+        o3d.io.write_triangle_mesh('datasets/output/' + mesh_name + dt_now.isoformat() + '/' + str(epoch) + '_output.obj', input_mesh)
+        mad_value = mad(input_mesh, gt_mesh)
+        print("mad_value: ", mad_value)
         writer.add_scalar("mean_angle_difference", mad_value, epoch)
 writer.close()
