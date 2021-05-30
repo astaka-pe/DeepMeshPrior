@@ -66,7 +66,7 @@ model.train()
 dt_now = datetime.datetime.now()
 log_dir = "./logs/" + mesh_name + dt_now.isoformat()
 writer = SummaryWriter(log_dir=log_dir)
-out_dir = "./datasets/denoising_output/" + mesh_name + dt_now.isoformat()
+out_dir = "./datasets/d_output/" + mesh_name + dt_now.isoformat()
 os.mkdir(out_dir)
 log_file = out_dir + "/condition.json"
 condition = {"input":input_file, "label":label_file, "gt": gt_file, "iter": FLAGS.iter ,"lap": FLAGS.lap, "skip": FLAGS.skip, "init_mad": init_mad, "lr": FLAGS.lr}
