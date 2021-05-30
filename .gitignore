@@ -1,2 +1,5 @@
-datasets/
+datasets/groundtruth/past
+datasets/*output
+datasets/_*
 logs/
+__*

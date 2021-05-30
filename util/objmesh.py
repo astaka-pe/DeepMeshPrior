@@ -88,6 +88,8 @@ class Vector(object):
 class ObjMesh(object):
     def __init__(self, filename=None):
         self._vertices = np.array([], dtype=np.float32)
+        self.vs = np.array([], dtype=np.float32)
+        self.faces = np.array([], dtype=np.float32)
         self._normals = np.array([], dtype=np.float32)
         self._texcoords = np.array([], dtype=np.float32)
         self._indices = np.array([], dtype=np.uint32)
