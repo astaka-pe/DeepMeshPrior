@@ -2,22 +2,27 @@ import numpy as np
 import torch
 from util.models import Mesh
 
-def mae_loss(pred_pos, real_pos):
+def mae_loss(pred_pos, real_pos, verts_mask=None):
     """mean-absolute error for vertex positions"""
-    # mean absolute difference for vertex positions
     diff_pos = torch.abs(real_pos - pred_pos)
     diff_pos = torch.sum(diff_pos.squeeze(), dim=1)
-    mae_pos = torch.sum(diff_pos) / len(diff_pos)
+    if verts_mask == None:
+        mae_pos = torch.sum(diff_pos) / len(diff_pos)
+    else:
+        mae_pos = torch.sum(diff_pos.T * verts_mask) / (torch.sum(verts_mask) + 1.0e-12)
     return mae_pos
 
-def mse_loss(pred_pos, real_pos):
+def mse_loss(pred_pos, real_pos, verts_mask=None):
     """mean-square error for vertex positions"""
     diff_pos = torch.abs(real_pos - pred_pos)
     diff_pos = diff_pos ** 2
     diff_pos = torch.sum(diff_pos.squeeze(), dim=1)
-    diff_pos = torch.sqrt(diff_pos)
-    mse_loss = torch.sum(diff_pos) / len(diff_pos)
-    return mse_loss
+    #diff_pos = torch.sqrt(diff_pos)
+    if verts_mask == None:
+        mse_pos = torch.sum(diff_pos) / len(diff_pos)
+    else:
+        mse_pos = torch.sum(diff_pos.T * verts_mask) / (torch.sum(verts_mask) + 1.0e-12)
+    return mse_pos
 
 def mae_loss_edge_lengths(pred_pos, real_pos, edges):
     """mean-absolute error for edge lengths"""
@@ -71,8 +76,14 @@ def mesh_laplacian_loss(pred_pos, ve, edges):
     sum_neigs = torch.sparse.mm(neig_mat, pred_pos)
     sum_count = torch.sparse.mm(neig_mat, torch.ones((num_verts, 1)).type_as(pred_pos))
     nnz_mask = (sum_count != 0).squeeze()
-    lap_vals = sum_count[nnz_mask, :] * pred_pos[nnz_mask, :] - sum_neigs[nnz_mask, :]
-    lap_vals = torch.sqrt(torch.sum(lap_vals * lap_vals, dim=1) + 1.0e-6)
+    #lap_vals = sum_count[nnz_mask, :] * pred_pos[nnz_mask, :] - sum_neigs[nnz_mask, :]
+    if len(torch.where(sum_count[:, 0]==0)[0]) == 0:
+        lap_vals = pred_pos[nnz_mask, :] - sum_neigs[nnz_mask, :] / sum_count[nnz_mask, :]
+    else:
+        print("[ERROR] Isorated vertices exist")
+        return False
+    #lap_vals = torch.sqrt(torch.sum(lap_vals * lap_vals, dim=1) + 1.0e-12)
+    lap_vals = torch.sum(lap_vals * lap_vals, dim=1)
     lap_loss = torch.sum(lap_vals) / torch.sum(nnz_mask)
 
     return lap_loss

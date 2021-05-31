@@ -44,6 +44,7 @@ class Net(nn.Module):
         
         else:
             # normal net
+            h = [16, 32, 64, 128, 256, 256, 512, 512, 256, 256, 128, 64, 32, 32, 16, 3]
             self.conv1  = GCNConv(h[0], h[1])
             self.conv2  = GCNConv(h[1], h[2])
             self.conv3  = GCNConv(h[2], h[3])
@@ -58,6 +59,7 @@ class Net(nn.Module):
             self.conv12 = GCNConv(h[11], h[12])
             self.conv13 = GCNConv(h[12], h[13])
             self.linear1 = nn.Linear(h[13], h[14])
+            self.linear2 = nn.Linear(h[14], h[15])
             
             self.bn1 = nn.BatchNorm1d(h[1])
             self.bn2 = nn.BatchNorm1d(h[2])
@@ -190,7 +192,7 @@ class Net(nn.Module):
             dx = self.conv11(dx, edge_index)
             dx = self.bn11(dx)
             dx = self.l_relu(dx)
-
+            
             dx = self.conv12(dx, edge_index)
             dx = self.bn12(dx)
             dx = self.l_relu(dx)
@@ -198,6 +200,9 @@ class Net(nn.Module):
             dx = self.conv13(dx, edge_index)
             dx = self.bn13(dx)
             dx = self.l_relu(dx)
+            
             dx = self.linear1(dx)
+            dx = self.l_relu(dx)
+            dx = self.linear2(dx)
         
         return x_pos + dx

@@ -15,12 +15,12 @@ import util.loss as Loss
 from torch.utils.tensorboard import SummaryWriter
 from torch_geometric.data import Data
 
-parser = argparse.ArgumentParser(description='Deep mesh prior for completion')
+parser = argparse.ArgumentParser(description='Deep mesh prior for denoising')
 parser.add_argument('-i', '--input', type=str, required=True)
-parser.add_argument('--lr', type=float, default=1.0e-3)
+parser.add_argument('--lr', type=float, default=0.01)
 parser.add_argument('--iter', type=int, default=5000)
 parser.add_argument('--skip', type=bool, default=False)
-parser.add_argument('--lap', type=float, default=0.2)
+parser.add_argument('--lap', type=float, default=3.0)
 FLAGS = parser.parse_args()
 
 for k, v in vars(FLAGS).items():
@@ -40,7 +40,7 @@ l_mesh = Mesh(label_file)
 i_mesh = Mesh(input_file)
 g_mesh = Mesh(gt_file)
 
-# ノードの特徴量
+# node-features and edge-index
 np.random.seed(42)
 x = np.random.normal(size=(l_mesh.vs.shape[0], 16))
 x = torch.tensor(x, dtype=torch.float, requires_grad=True)
@@ -58,13 +58,13 @@ dataset.y = dataset.y.to(device)
 dataset.edge_index = dataset.edge_index.to(device)
 print(dataset.check_graph(data))
 
-# モデルのインスタンス生成
+# create model instance
 model = Net(FLAGS.skip).to(device)
 model.train()
 
 # output experimental conditions
 dt_now = datetime.datetime.now()
-log_dir = "./logs/" + mesh_name + dt_now.isoformat()
+log_dir = "./logs/denoise/" + mesh_name + dt_now.isoformat()
 writer = SummaryWriter(log_dir=log_dir)
 out_dir = "./datasets/d_output/" + mesh_name + dt_now.isoformat()
 os.mkdir(out_dir)
@@ -103,4 +103,5 @@ for epoch in range(1, 10001):
         min_mad = min(mad_value, min_mad)
         print("mad_value: ", mad_value, "min_mad: ", min_mad)
         writer.add_scalar("mean_angle_difference", mad_value, epoch)
+
 writer.close()
