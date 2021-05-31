@@ -86,7 +86,7 @@ with open(log_file, mode="w") as f:
 # learning loop
 optimizer = torch.optim.Adam(model.parameters(), lr=FLAGS.lr)
 
-for epoch in range(1, FLAGS.iter + 1):
+for epoch in range(1, FLAGS.iter+1):
     optimizer.zero_grad()
     out = model(dataset)
     loss1 = Loss.mse_loss(out, dataset.y, verts_mask)

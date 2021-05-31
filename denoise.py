@@ -20,7 +20,7 @@ parser.add_argument('-i', '--input', type=str, required=True)
 parser.add_argument('--lr', type=float, default=0.01)
 parser.add_argument('--iter', type=int, default=5000)
 parser.add_argument('--skip', type=bool, default=False)
-parser.add_argument('--lap', type=float, default=3.0)
+parser.add_argument('--lap', type=float, default=10.0)
 FLAGS = parser.parse_args()
 
 for k, v in vars(FLAGS).items():
@@ -81,7 +81,7 @@ print("initial_mad_value: ", init_mad)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=FLAGS.lr)
 
-for epoch in range(1, 10001):
+for epoch in range(1, FLAGS.iter+1):
     optimizer.zero_grad()
     out = model(dataset)
     loss1 = Loss.mse_loss(out, dataset.y)
