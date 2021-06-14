@@ -20,7 +20,7 @@ parser.add_argument('-i', '--input', type=str, required=True)
 parser.add_argument('--lr', type=float, default=0.01)
 parser.add_argument('--iter', type=int, default=5000)
 parser.add_argument('--skip', type=bool, default=False)
-parser.add_argument('--lap', type=float, default=0.3)
+parser.add_argument('--lap', type=float, default=0.2)
 FLAGS = parser.parse_args()
 
 for k, v in vars(FLAGS).items():
@@ -64,7 +64,6 @@ dataset.edge_index = dataset.edge_index.to(device)
 verts_mask = torch.ones(len(dataset.x))
 verts_mask[new_vert_list] = 0
 verts_mask = verts_mask.to(device)
-print(dataset.check_graph(data))
 
 # create model instance
 model = Net(FLAGS.skip).to(device)

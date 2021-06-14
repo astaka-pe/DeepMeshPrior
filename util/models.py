@@ -15,22 +15,6 @@ class Dataset:
         self.x_pos = data['x_pos']
         self.edge_index = data['edge_index']
 
-    def check_graph(self, data):
-        '''グラフ情報を表示'''
-        print("グラフ構造:", data)
-        print("グラフのキー: ", data.keys)
-        print("ノード数:", data.num_nodes)
-        print("エッジ数:", data.num_edges)
-        print("ノードの特徴量数:", data.num_node_features)
-        print("孤立したノードの有無:", data.contains_isolated_nodes())
-        print("自己ループの有無:", data.contains_self_loops())
-        print("====== ノードの特徴量:x ======")
-        print(data['x'])
-        print("====== ノードのクラス:y ======")
-        print(data['y'])
-        print("========= エッジ形状 =========")
-        print(data['edge_index'])
-
 class Mesh:
     def __init__(self, path):
         self.path = path

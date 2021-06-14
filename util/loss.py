@@ -17,7 +17,7 @@ def mse_loss(pred_pos, real_pos, verts_mask=None):
     diff_pos = torch.abs(real_pos - pred_pos)
     diff_pos = diff_pos ** 2
     diff_pos = torch.sum(diff_pos.squeeze(), dim=1)
-    #diff_pos = torch.sqrt(diff_pos)
+    diff_pos = torch.sqrt(diff_pos)
     if verts_mask == None:
         mse_pos = torch.sum(diff_pos) / len(diff_pos)
     else:
@@ -82,8 +82,8 @@ def mesh_laplacian_loss(pred_pos, ve, edges):
     else:
         print("[ERROR] Isorated vertices exist")
         return False
-    #lap_vals = torch.sqrt(torch.sum(lap_vals * lap_vals, dim=1) + 1.0e-12)
-    lap_vals = torch.sum(lap_vals * lap_vals, dim=1)
+    lap_vals = torch.sqrt(torch.sum(lap_vals * lap_vals, dim=1) + 1.0e-12)
+    #lap_vals = torch.sum(lap_vals * lap_vals, dim=1)
     lap_loss = torch.sum(lap_vals) / torch.sum(nnz_mask)
 
     return lap_loss

@@ -20,7 +20,7 @@ parser.add_argument('-i', '--input', type=str, required=True)
 parser.add_argument('--lr', type=float, default=0.01)
 parser.add_argument('--iter', type=int, default=5000)
 parser.add_argument('--skip', type=bool, default=False)
-parser.add_argument('--lap', type=float, default=10.0)
+parser.add_argument('--lap', type=float, default=1.0)
 FLAGS = parser.parse_args()
 
 for k, v in vars(FLAGS).items():
@@ -56,7 +56,6 @@ dataset = Dataset(data)
 dataset.x = dataset.x.to(device)
 dataset.y = dataset.y.to(device)
 dataset.edge_index = dataset.edge_index.to(device)
-print(dataset.check_graph(data))
 
 # create model instance
 model = Net(FLAGS.skip).to(device)
