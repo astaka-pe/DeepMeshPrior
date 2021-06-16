@@ -1,11 +1,11 @@
+<img src="docs/img/dragon.gif" align="right" width="300">
+<br><br><br><br><br><br>
+
 # DeepMeshPrior
 
 Deep Mesh Prior is an unsupervised mesh restoration method using graph convolutional networks, which takes a single incomplete mesh as input data and directly outputs the reconstructed mesh without being trained using large-scale datasets.
 
-<img src='docs/img/abstract.png' width='100%'>
-<video width="600" controls>
-  <source src="docs/mov/dragon.mov">
-</video>
+<img src="docs/img/abstract.png" width="600">
 
 # Getting Started
 
