@@ -1,4 +1,4 @@
-<img src="docs/img/dragon.gif" align="right" width="400">
+<img src="docs/img/animation.gif" align="right" width="400">
 <br><br><br><br><br><br>
 
 # Deep Mesh Prior
