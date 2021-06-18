@@ -17,6 +17,12 @@ conda env create -f environment.yml
 conda activate dmp
 ```
 
+## Preparation
+```
+mkdir datasets/{c_output,d_output}
+mkdir logs/
+```
+
 ## Mesh Denoising
 ```
 python denoise.py -i datasets/d_input/dragon
