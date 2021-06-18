@@ -20,7 +20,7 @@ parser.add_argument('-i', '--input', type=str, required=True)
 parser.add_argument('--lr', type=float, default=0.01)
 parser.add_argument('--iter', type=int, default=5000)
 parser.add_argument('--skip', type=bool, default=False)
-parser.add_argument('--lap', type=float, default=1.0)
+parser.add_argument('--lap', type=float, default=1.4)
 FLAGS = parser.parse_args()
 
 for k, v in vars(FLAGS).items():
