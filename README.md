@@ -19,12 +19,12 @@ conda activate dmp
 
 ## Mesh Denoising
 ```
-python denoise.py -i datasets/d_input/bumpy
+python denoise.py -i datasets/d_input/dragon
 ```
 - To view the loss and MAD, run `tensorboard --logdir logs/denoise` in another terminal and click <http://localhost:6006>.
 
 ## Mesh Completion
 ```
-python completion.py -i datasets/c_input/bumpy
+python completion.py -i datasets/c_input/dragon
 ```
 - To view the loss, run `tensorboard --logdir logs/competion` in another terminal and click <http://localhost:6006>.
