@@ -1,7 +1,9 @@
 <img src="docs/img/animation.gif" align="right" width="400">
-<br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
 
 # Deep Mesh Prior
+
+### Learning to Generate 3D Shapes and Scenes | CVPR 2021 Workshop [[Paper]](https://arxiv.org/abs/2107.02909)
 
 Deep Mesh Prior is an unsupervised mesh restoration method using graph convolutional networks, which takes a single incomplete mesh as input data and directly outputs the reconstructed mesh without being trained using large-scale datasets.
 
