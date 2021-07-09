@@ -7,7 +7,7 @@
 
 Deep Mesh Prior is an unsupervised mesh restoration method using graph convolutional networks, which takes a single incomplete mesh as input data and directly outputs the reconstructed mesh without being trained using large-scale datasets.
 
-<img src="docs/img/abstract.png" width="600">
+<img src="docs/img/abstract.png" width="400">
 
 # Getting Started
 
