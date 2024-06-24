@@ -28,7 +28,7 @@ conda activate dmp
 git clone https://github.com/astaka-pe/DeepMeshPrior.git
 cd DeepMeshPrior
 docker build -t astaka-pe/dmp .
-docker run -itd --gpus all --name dmp -v.:/work astaka-pe/dmp -p 6006:6006
+docker run -itd --gpus all --name dmp -v.:/work astaka-pe/dmp
 docker exec -it dmp /bin/bash
 ```
 
