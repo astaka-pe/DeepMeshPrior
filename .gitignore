@@ -1,5 +1,4 @@
 datasets/groundtruth/past
-datasets/c_input/*
-datasets/d_input/*
+datasets/*
 logs/
 *.pyc
