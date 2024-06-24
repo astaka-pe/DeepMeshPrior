@@ -1,4 +1,4 @@
 datasets/groundtruth/past
-datasets/*
+datasets/
 logs/
 *.pyc
