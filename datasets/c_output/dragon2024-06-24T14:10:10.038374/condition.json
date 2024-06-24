@@ -1,9 +1,0 @@
-{
-  "input": "datasets/c_input/dragon/dragon_init.obj",
-  "label": "datasets/c_input/dragon/dragon.obj",
-  "inserted_vs": "datasets/c_input/dragon/dragon.txt",
-  "iter": 5000,
-  "lap": 0.2,
-  "skip": false,
-  "lr": 0.01
-}
