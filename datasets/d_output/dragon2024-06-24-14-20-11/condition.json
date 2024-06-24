@@ -1,0 +1,10 @@
+{
+  "input": "datasets/d_input/dragon/dragon_smooth.obj",
+  "label": "datasets/d_input/dragon/dragon_noise.obj",
+  "gt": "datasets/groundtruth/dragon.obj",
+  "iter": 5000,
+  "lap": 1.4,
+  "skip": false,
+  "init_mad": 43.33206020248546,
+  "lr": 0.01
+}

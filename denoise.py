@@ -62,10 +62,10 @@ model = Net(FLAGS.skip).to(device)
 model.train()
 
 # output experimental conditions
-dt_now = datetime.datetime.now()
-log_dir = "./logs/denoise/" + mesh_name + dt_now.isoformat()
+dt_now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+log_dir = "./logs/denoise/" + mesh_name + dt_now
 writer = SummaryWriter(log_dir=log_dir)
-out_dir = "./datasets/d_output/" + mesh_name + dt_now.isoformat()
+out_dir = "./datasets/d_output/" + mesh_name + dt_now
 os.mkdir(out_dir)
 log_file = out_dir + "/condition.json"
 condition = {"input":input_file, "label":label_file, "gt": gt_file, "iter": FLAGS.iter ,"lap": FLAGS.lap, "skip": FLAGS.skip, "init_mad": init_mad, "lr": FLAGS.lr}

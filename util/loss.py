@@ -21,7 +21,7 @@ def mse_loss(pred_pos, real_pos, verts_mask=None):
     if verts_mask == None:
         mse_pos = torch.sum(diff_pos) / len(diff_pos)
     else:
-        mse_pos = torch.sum(diff_pos.T * verts_mask) / (torch.sum(verts_mask) + 1.0e-12)
+        mse_pos = torch.sum(diff_pos * verts_mask) / (torch.sum(verts_mask) + 1.0e-12)
     return mse_pos
 
 def mae_loss_edge_lengths(pred_pos, real_pos, edges):
