@@ -48,3 +48,8 @@ python3 denoise.py -i datasets/d_input/dragon
 python3 completion.py -i datasets/c_input/dragon
 ```
 <!-- - To view the loss, run `tensorboard --logdir logs/completion` in another terminal and click <http://localhost:6006>. -->
+
+# Follow-up Works
+
+Please check out our newer works, ["Dual-DMP"](https://github.com/astaka-pe/Dual-DMP) for mesh denoising and ["SeMIGCN"](https://github.com/astaka-pe/SeMIGCN) for mesh inpainting.
+
